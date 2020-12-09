@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ZtBugMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.ZtBug">
+        <id column="id" property="id" />
+        <result column="product" property="product" />
+        <result column="branch" property="branch" />
+        <result column="module" property="module" />
+        <result column="project" property="project" />
+        <result column="plan" property="plan" />
+        <result column="story" property="story" />
+        <result column="storyVersion" property="storyversion" />
+        <result column="task" property="task" />
+        <result column="toTask" property="totask" />
+        <result column="toStory" property="tostory" />
+        <result column="title" property="title" />
+        <result column="keywords" property="keywords" />
+        <result column="severity" property="severity" />
+        <result column="pri" property="pri" />
+        <result column="type" property="type" />
+        <result column="os" property="os" />
+        <result column="browser" property="browser" />
+        <result column="hardware" property="hardware" />
+        <result column="found" property="found" />
+        <result column="steps" property="steps" />
+        <result column="status" property="status" />
+        <result column="subStatus" property="substatus" />
+        <result column="color" property="color" />
+        <result column="confirmed" property="confirmed" />
+        <result column="activatedCount" property="activatedcount" />
+        <result column="activatedDate" property="activateddate" />
+        <result column="mailto" property="mailto" />
+        <result column="openedBy" property="openedby" />
+        <result column="openedDate" property="openeddate" />
+        <result column="openedBuild" property="openedbuild" />
+        <result column="assignedTo" property="assignedto" />
+        <result column="assignedDate" property="assigneddate" />
+        <result column="deadline" property="deadline" />
+        <result column="resolvedBy" property="resolvedby" />
+        <result column="resolution" property="resolution" />
+        <result column="resolvedBuild" property="resolvedbuild" />
+        <result column="resolvedDate" property="resolveddate" />
+        <result column="closedBy" property="closedby" />
+        <result column="closedDate" property="closeddate" />
+        <result column="duplicateBug" property="duplicatebug" />
+        <result column="linkBug" property="linkbug" />
+        <result column="case" property="case" />
+        <result column="caseVersion" property="caseversion" />
+        <result column="result" property="result" />
+        <result column="repo" property="repo" />
+        <result column="entry" property="entry" />
+        <result column="lines" property="lines" />
+        <result column="v1" property="v1" />
+        <result column="v2" property="v2" />
+        <result column="repoType" property="repotype" />
+        <result column="testtask" property="testtask" />
+        <result column="lastEditedBy" property="lasteditedby" />
+        <result column="lastEditedDate" property="lastediteddate" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, product, branch, module, project, plan, story, storyVersion, task, toTask, toStory, title, keywords, severity, pri, type, os, browser, hardware, found, steps, status, subStatus, color, confirmed, activatedCount, activatedDate, mailto, openedBy, openedDate, openedBuild, assignedTo, assignedDate, deadline, resolvedBy, resolution, resolvedBuild, resolvedDate, closedBy, closedDate, duplicateBug, linkBug, case, caseVersion, result, repo, entry, lines, v1, v2, repoType, testtask, lastEditedBy, lastEditedDate, deleted
+    </sql>
+    <select id="newBugEverDay" resultType="java.util.Map">
+        select count(openedDate) as EverDayNewBugCount,date_format(openedDate,'%Y-%m-%d') as Date from zt_bug
+        where deleted = '0'
+        and product = #{productId}
+        and openedBy in (select account from zt_user zu
+        where `role` in ('qa','pd') and deleted ='0' and account != 'zhaiyingying')
+        group by date_format(openedDate,'%Y-%m-%d')
+    </select>
+    <select id="selectBug" resultType="com.example.demo.entity.ZtBug">
+        select * from zt_bug
+    </select>
+    <select id="resolvedBugCount" resultType="java.util.Map">
+        select count(*) as resolvedBugCount,resolvedBy,realname from zt_bug,
+        (select account,realname from zt_user
+        where deleted = '0'
+        and visits >= 5
+        and `role` not in ('qa','po','pm','pd')
+        and account != 'admin') as zt_dev
+        where zt_bug.resolvedBy = zt_dev.account
+        and resolution = 'fixed'
+        and product = #{productId}
+        and resolvedBy in (select account from zt_user
+        where deleted = '0'
+        and visits >= 5
+        and `role` not in ('qa','po','pm','pd')
+        and account != 'admin')
+        group by resolvedBy
+    </select>
+    <select id="fixedGreaterOneBugCount" resultType="java.util.Map">
+        select count(*) as fixedGreaterOneCount,resolvedBy from zt_bug
+        where resolution = 'fixed' and activatedCount > 0 and product = #{productId}
+        and resolvedBy in (select account from zt_user where deleted = '0' and visits >= 5 and `role` not in ('qa','po','pm','pd')
+        and account != 'admin')
+        group by resolvedBy
+    </select>
+
+</mapper>

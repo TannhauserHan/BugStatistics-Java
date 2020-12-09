@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ZtUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.ZtUser">
+        <id column="id" property="id" />
+        <result column="dept" property="dept" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="role" property="role" />
+        <result column="realname" property="realname" />
+        <result column="nickname" property="nickname" />
+        <result column="commiter" property="commiter" />
+        <result column="avatar" property="avatar" />
+        <result column="birthday" property="birthday" />
+        <result column="gender" property="gender" />
+        <result column="email" property="email" />
+        <result column="skype" property="skype" />
+        <result column="qq" property="qq" />
+        <result column="mobile" property="mobile" />
+        <result column="phone" property="phone" />
+        <result column="weixin" property="weixin" />
+        <result column="dingding" property="dingding" />
+        <result column="slack" property="slack" />
+        <result column="whatsapp" property="whatsapp" />
+        <result column="address" property="address" />
+        <result column="zipcode" property="zipcode" />
+        <result column="join" property="join" />
+        <result column="visits" property="visits" />
+        <result column="ip" property="ip" />
+        <result column="last" property="last" />
+        <result column="fails" property="fails" />
+        <result column="locked" property="locked" />
+        <result column="ranzhi" property="ranzhi" />
+        <result column="score" property="score" />
+        <result column="scoreLevel" property="scorelevel" />
+        <result column="deleted" property="deleted" />
+        <result column="clientStatus" property="clientstatus" />
+        <result column="clientLang" property="clientlang" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dept, account, password, role, realname, nickname, commiter, avatar, birthday, gender, email, skype, qq, mobile, phone, weixin, dingding, slack, whatsapp, address, zipcode, join, visits, ip, last, fails, locked, ranzhi, score, scoreLevel, deleted, clientStatus, clientLang
+    </sql>
+
+</mapper>
